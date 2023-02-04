@@ -205,7 +205,6 @@ justify-content: center;">
           data: {linkedin: $("#linkedin").val()},
     
           success: function (res) {
-            console.log(res);
             $("#loadingID").removeClass("loading");
             $("#livedata").html(
               `<h6 class="m-lg-3">Full Name: ${res?.profile?.firstName} ${res?.profile?.lastName}</h6>

@@ -11,16 +11,33 @@ from rest_framework.views import APIView
 context = {}
 class DownloadPDF(APIView):
     def get(self, request):
-        print(context)
         response = HttpResponse(content_type='application/pdf')  
-        response['Content-Disposition'] = f"""attachment; filename="{context["profile"]["firstName"]}.pdf"""  
+        response['Content-Disposition'] = f"""attachment; filename="ys123.pdf"""  
         p = canvas.Canvas(response)  
         p.setFont("Times-Roman", 20)  
-        p.drawString(100,100, "Ekta Solve more crimes.")
-        p.drawString(100,100, f"Full Name: ")
+        p.drawString(10,800, "Ekta Solve more crimes.")
+        p.drawString(10,750, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")
+        p.drawString(10,700, f"Industry Name: {context['profile']['industryName']}")
+        if 'email_address' in context['contact_info']:
+            p.drawString(10,650, f"Email: {context['contact_info']['email_address']}")
+        else:
+            p.drawString(10,650, f"Email: NOT ADDED")
+            
+        if len(context['contact_info']['phone_numbers']) != 0:
+            p.drawString(10,600, f"Phone Number: {context['contact_info']['phone_numbers'][0]['number']}")
+        else:
+            p.drawString(10,600, f"Phone Number: NOT ADDED")
+            
+        if 'birthDate' in context['profile']:
+            p.drawString(10,550, f"Birthday: {context['profile']['birthDate']['month']} month, {context['profile']['birthDate']['day']} day.")
+        if len(context['profile']['experience']) != 0:
+            p.drawString(10,500, f"Experience: {context['profile']['experience'][0]['companyName']}, {context['profile']['experience'][0]['locationName']}")
+        if len(context['profile']['education']) != 0:
+            p.drawString(10,450, f"Education: {context['profile']['education'][0]['school']['schoolName']}")
+        p.drawString(10,400, f"LinkedIN URL: https://www.linkedin.com/in/{context['username']}/")
         p.save()
         return response
-
+    
 class LoginView(View):
     def get(self, request):
         return render(request, "login.html")
