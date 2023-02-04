@@ -12,7 +12,10 @@ def download_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="file.pdf"'  
     p = canvas.Canvas(response)  
     p.setFont("Times-Roman", 20)  
-    p.drawString(100,100, "Ekta Solve more crimes.")
+    p.drawString(100,950, "Ekta - Solve more crimes.")
+    p.drawString(100,50, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")
+    p.drawString(100,100, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")
+    p.drawString(100,100, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")
     p.drawString(100,100, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")
     p.save()  
     return response
