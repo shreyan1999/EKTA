@@ -13,7 +13,7 @@ class DownloadPDF(APIView):
     def get(self, request):
         print(context)
         response = HttpResponse(content_type='application/pdf')  
-        response['Content-Disposition'] = f"""attachment; filename="ys123.pdf"""  
+        response['Content-Disposition'] = f"""attachment; filename="{context["profile"]["firstName"]}.pdf"""  
         p = canvas.Canvas(response)  
         p.setFont("Times-Roman", 20)  
         p.drawString(100,100, "Ekta Solve more crimes.")
@@ -27,8 +27,8 @@ class LoginView(View):
 
 class HomeView(View):
     def get(self, request):
-        # Authenticate using any Linkedin account credentials
         return render(request, "index.html")
+    
     # def post(self, request):
     #     global username
     #     if "linkedin" in request.POST:
@@ -47,5 +47,5 @@ class LinkedInDATAAPI(APIView):
             contact_info = api.get_profile_contact_info(data["linkedin"])
         except:
             return Response({"status": status.HTTP_404_NOT_FOUND, "message": "Result not found."}, status=status.HTTP_404_NOT_FOUND)
-        context = {"status": status.HTTP_200_OK, "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}
-        return Response({"status": status.HTTP_200_OK, "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}, status=status.HTTP_200_OK)
+        context = {"username": data["linkedin"], "status": status.HTTP_200_OK, "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}
+        return Response({"status": status.HTTP_200_OK, "username": data["linkedin"], "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}, status=status.HTTP_200_OK)
