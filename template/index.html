@@ -4,26 +4,20 @@
 {% block header %}
 <div style="width: 100%;
 justify-content: center;">
-  <h3 style="color: #8cdeea; text-align:center;">Device Management</h3>
+  <h3 style="color: #8cdeea; text-align:center;">Ekta Solve More Crimes</h3>
 </div>
 {% endblock %}
 
 
 {% block content %}
+<div id="loadingID"></div>
 <div class="d-flex justify-content-center">
-  <form action="" method="POST">
-    <div class="input-group" style="width: 50%;margin: 1rem 5rem;">
-      {% csrf_token %}
-      <input type="search" class="form-control rounded " name="linkedin" placeholder="Search by linkedin" aria-label="Search" aria-describedby="search-addon" style="width: 20rem;" />
-      <center>
-        <button type="submit" class="btn btn-outline-primary">search</button>
-      </center>
-    </div>
-    <a href="{% url 'pdf-download' %}">Download</a>
-</form>
+  <div class="input-group" style="width: 50%;margin: 1rem 5rem;">
+    <input type="search" class="form-control rounded" id="linkedin" placeholder="Search by linkedin" aria-label="Search" aria-describedby="search-addon" style="width: 20rem;" />
+    <button type="submit" onClick="submitLinkedin();" class="btn btn-outline-primary">search</button>
+    <button onClick="downloadPDF();" style="display:none;" id="downloadpdfbtn" class="btn btn-outline-primary">Download</button>
+  </div>
 </div>
-
-
 
 <div class="row d-flex justify-content-center" style="margin: 1rem 4rem;">
   
@@ -84,26 +78,19 @@ justify-content: center;">
     <div class="card mt-5 custom-btn" style="height: 430px">
 
     
-      <div class="num-box" style="min-width: 255px!important">
-      
+      <div class="num-box" style="min-width: 255px!important" id="livedata">
         <h6 class="m-lg-3">Full Name: {{profile.firstName}} {{profile.lastName}}</h6>
         <h6 class="m-lg-3">Email: {{email_address}}</h6>
         <h6 class="m-lg-3">Phone Number: {{number}}</h6>
         <h6 class="m-lg-3">industrial Name: {{profile.industryName}}</h6>
-        <h6 class="m-lg-3">Location: {{profile.locationName}}</h6>
-        <h6 class="m-lg-3">Birthday: {{profile.birthDate.month}} month, {{profile.birthDate.day}} day.</h6>
-        <h6 class="m-lg-3">Geo Location Name: {{profile.geoLocationName}}</h6>
-        <h6 class="m-lg-3">HeadLine: {{profile.headline}}</h6>
-        <h6 class="m-lg-3">profile_id: {{profile.profile_id}}</h6>
-        <h6 class="m-lg-3">Address: SSSsssfsf</h6>
       </div> 
 
-    <!-- <div class="num-box" style="min-width: 255px;">
-    <h5>Recent Location</h5>
-    <div class="responsive-map mt-5">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2822.7806761080233!2d-93.29138368446431!3d44.96844997909819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x52b32b6ee2c87c91%3A0xc20dff2748d2bd92!2sWalker+Art+Center!5e0!3m2!1sen!2sus!4v1514524647889" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+      <div class="num-box" style="min-width: 255px;">
+      <h5>Recent Location</h5>
+      <div class="responsive-map mt-5">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2822.7806761080233!2d-93.29138368446431!3d44.96844997909819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x52b32b6ee2c87c91%3A0xc20dff2748d2bd92!2sWalker+Art+Center!5e0!3m2!1sen!2sus!4v1514524647889" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
       </div>
-    </div> -->
 
     </div> 
 </a>
@@ -202,23 +189,55 @@ justify-content: center;">
          
        
   </style>
-  
+
 
   <script>
-    $(document).ready(function(){
- 
-      // Initialize select2
-      $("#SelExample").select2();
-      $("#SelExample").select2("val", "4");
-    $('#SelExample option:selected').text('Vizag');
-      // Read selected option
-      $('#but_read').click(function(){
-        var username = $('#SelExample option:selected').text();
-        var userid = $('#SelExample').val();
+    var response;
+    const submitLinkedin = () => {
+      $("#loadingID").addClass("loading");
+      if ($("#linkedin").val() !== ""){
+        $.ajax({
+          type: "POST",
+          url: '{% url "linkedin-api" %}',
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {linkedin: $("#linkedin").val()},
     
-        $('#result').text("id : " + userid + ", name : " + username);
+          success: function (res) {
+            console.log(res);
+            $("#loadingID").removeClass("loading");
+            $("#livedata").html(
+              `<h6 class="m-lg-3">Full Name: ${res?.profile?.firstName} ${res?.profile?.lastName}</h6>
+              <h6 class="m-lg-3">Email: ${res?.contact_info?.email_address}</h6>
+              <h6 class="m-lg-3">Phone Number: ${res?.contact_info?.phone_numbers[0]?.number}</h6>
+              <h6 class="m-lg-3">industrial Name: ${res?.profile?.industryName}</h6>`
+            )
+            response = res;
+            $("#downloadpdfbtn").css("display", "block");
+          },
+    
+          error: function (xhr) {
+            document.getElementById("there_alert").innerHTML = xhr.responseJSON.message;
+            $("#loadingID").removeClass("loading");
+          },
+        });
+      }
+      else{
+        console.log("blank")
+        $("#loadingID").removeClass("loading");
+      }
+    }
+
+
+    const downloadPDF = () => {
+      $.ajax({
+        type: "POST",
+        url: '{% url "pdf-download" %}',
+        headers: { "X-CSRFToken": "{{ csrf_token }}" },
+        data: {result: JSON.stringify(response)},
+        success: function (res) {
+        }
       });
-    });
+    }
   </script>
 
 {% endblock %}

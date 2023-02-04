@@ -3,6 +3,7 @@ from .views import *
 urlpatterns = [
     path("",LoginView.as_view(),name="login"),
     path("home/",HomeView.as_view(),name="home"),
-    path("pdf/download", download_pdf, name="pdf-download")
+    path("pdf/download/", DownloadPDF.as_view(), name="pdf-download"),
+    path("linkedin/data/api/", LinkedInDATAAPI.as_view(), name="linkedin-api")
 ]
 

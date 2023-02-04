@@ -31,10 +31,6 @@
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"></script>
-
         <!-- CDN for toast message -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
         <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
@@ -42,17 +38,7 @@
 
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
-        
-     
-        
-        <link rel="stylesheet" href="{% static 'css/table-btn.css' %}">
-        <link rel="stylesheet" href="{% static 'css/bulb.css' %}">
-        <script src="/static/js/All_validation.js" async defer></script>
-        
-
-      
-       
+        <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     </head>
    
     <body>
@@ -120,58 +106,29 @@
                           <i class='bx'><span class="material-symbols-outlined">
                             emoji_objects
                             </span></i> 
-                          <span class="nav_logo-name">Mobiloitte</span> 
+                          <span class="nav_logo-name">EKTA</span> 
                         </a>
 
 
 
                         <div class="nav_list"> 
-                            <a href="" class="nav_link"> 
+                            <!-- <a href="" class="nav_link"> 
                               <i class='bx'><span class="material-symbols-outlined">
                                 dashboard_customize
                                 </span></i> 
                               <span class="nav_name">Dashboard</span> 
-                            </a>
+                            </a> -->
 
                             <a href="" class="nav_link"> 
                               <i class='bx'><span class="material-symbols-outlined">
                                 boy
                                 </span></i> 
-                              <span class="nav_name">Admin Management</span> 
+                              <span class="nav_name">Station Management</span> 
                             </a> 
 
-                             {% comment %} <a href="{% url 'app:a-subuser-list' %}" class="nav_link"> 
-                              <i class='bx'><span class="material-symbols-outlined">
-                                person_3
-                                </span></i> 
-                              <span class="nav_name">User Management</span> 
-                             </a>   {% endcomment %}
-
-                            <a href="" class="nav_link"> 
-                              <span class="material-symbols-outlined">
-                                location_on
-                                </span>
-                              <span class="nav_name">Location Management</span> 
-                            </a> 
-
-
-                            <style>
-                              {% comment %} .dropdown-toggle{
-                                font-size: 20px;,
-                                margin-left: 9px;
-                              } {% endcomment %}
-                            </style>
-                             
-
-                            
-                           
                             <a href="" class="nav_link"> 
                               <i class="bx"><span class="material-symbols-outlined">account_circle</span></i> 
                               <span class="nav_name">My Account</span> 
-                            </a> 
-
-                            <a href="" class="nav_link">  
-                              <span class="nav_name"></span> 
                             </a> 
                       </div>
 
@@ -228,11 +185,6 @@
               {% block content %}  
               
               {% endblock content %}
-
-
-              
-
-
             </div>
             <!--Container Main end-->
            
