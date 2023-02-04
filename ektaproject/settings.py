@@ -79,6 +79,15 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #    'ENGINE': 'django.db.backends.postgresql',
+    #    'NAME': "ksp",
+    #    'USER': 'ksp',
+    #    'PASSWORD': 'Rebels@123',
+    #    'HOST': 'ksp.postgres.database.azure.com',
+    #    'PORT': "5432",
+    #    'SSLMODE': 'true'
+    # }
 }
 
 

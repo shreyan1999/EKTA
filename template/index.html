@@ -11,10 +11,16 @@ justify-content: center;">
 
 {% block content %}
 <div class="d-flex justify-content-center">
-<div class="input-group" style="width: 50%;margin: 1rem 5rem;">
-  <input type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-  <button type="button" class="btn btn-outline-primary">search</button>
-</div>
+  <form action="" method="POST">
+    <div class="input-group" style="width: 50%;margin: 1rem 5rem;">
+      {% csrf_token %}
+      <input type="search" class="form-control rounded " name="linkedin" placeholder="Search by linkedin" aria-label="Search" aria-describedby="search-addon" style="width: 20rem;" />
+      <center>
+        <button type="submit" class="btn btn-outline-primary">search</button>
+      </center>
+    </div>
+    <a href="{% url 'pdf-download' %}">Download</a>
+</form>
 </div>
 
 
@@ -80,19 +86,24 @@ justify-content: center;">
     
       <div class="num-box" style="min-width: 255px!important">
       
-        <h6 class="m-lg-3">Name: piyush</h6>
-        <h6 class="m-lg-3">Phone Number: 84848844848</h6>
+        <h6 class="m-lg-3">Full Name: {{profile.firstName}} {{profile.lastName}}</h6>
+        <h6 class="m-lg-3">Email: {{email_address}}</h6>
+        <h6 class="m-lg-3">Phone Number: {{number}}</h6>
+        <h6 class="m-lg-3">industrial Name: {{profile.industryName}}</h6>
+        <h6 class="m-lg-3">Location: {{profile.locationName}}</h6>
+        <h6 class="m-lg-3">Birthday: {{profile.birthDate.month}} month, {{profile.birthDate.day}} day.</h6>
+        <h6 class="m-lg-3">Geo Location Name: {{profile.geoLocationName}}</h6>
+        <h6 class="m-lg-3">HeadLine: {{profile.headline}}</h6>
+        <h6 class="m-lg-3">profile_id: {{profile.profile_id}}</h6>
         <h6 class="m-lg-3">Address: SSSsssfsf</h6>
-        <h6 class="m-lg-3">Bank Details:</h6>
-
       </div> 
 
-    <div class="num-box" style="min-width: 255px;">
+    <!-- <div class="num-box" style="min-width: 255px;">
     <h5>Recent Location</h5>
     <div class="responsive-map mt-5">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2822.7806761080233!2d-93.29138368446431!3d44.96844997909819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x52b32b6ee2c87c91%3A0xc20dff2748d2bd92!2sWalker+Art+Center!5e0!3m2!1sen!2sus!4v1514524647889" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
       </div>
-    </div>
+    </div> -->
 
     </div> 
 </a>
