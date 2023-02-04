@@ -15,7 +15,7 @@ justify-content: center;">
   <div class="input-group" style="width: 50%;margin: 1rem 5rem;">
     <input type="search" class="form-control rounded" id="linkedin" placeholder="Search by linkedin" aria-label="Search" aria-describedby="search-addon" style="width: 20rem;" />
     <button type="submit" onClick="submitLinkedin();" class="btn btn-outline-primary">search</button>
-    <button onClick="downloadPDF();" style="display:none;" id="downloadpdfbtn" class="btn btn-outline-primary">Download</button>
+    <button onClick="location.href=`{% url 'pdf-download' %}`" style="display:none;" id="downloadpdfbtn" class="btn btn-outline-primary">Download</button>
   </div>
 </div>
 
@@ -225,18 +225,6 @@ justify-content: center;">
         console.log("blank")
         $("#loadingID").removeClass("loading");
       }
-    }
-
-
-    const downloadPDF = () => {
-      $.ajax({
-        type: "POST",
-        url: '{% url "pdf-download" %}',
-        headers: { "X-CSRFToken": "{{ csrf_token }}" },
-        data: {result: JSON.stringify(response)},
-        success: function (res) {
-        }
-      });
     }
   </script>
 
