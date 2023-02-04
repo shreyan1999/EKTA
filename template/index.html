@@ -13,7 +13,7 @@ justify-content: center;">
 <div id="loadingID"></div>
 <div class="d-flex justify-content-center">
   <div class="input-group" style="width: 50%;margin: 1rem 5rem;">
-    <input type="search" class="form-control rounded" id="linkedin" placeholder="Search by UserID" aria-label="Search" aria-describedby="search-addon" style="width: 20rem;" />
+    <input type="search" class="form-control rounded" id="linkedin" placeholder="Search by UserID" maxlength="25" aria-label="Search" aria-describedby="search-addon" style="width: 20rem;" />
     <button type="submit" onClick="submitLinkedin();" class="btn btn-outline-primary">search</button>
     <button onClick="location.href=`{% url 'pdf-download' %}`" style="display:none;" id="downloadpdfbtn" class="btn btn-outline-primary">Download</button>
   </div>
@@ -21,6 +21,8 @@ justify-content: center;">
 
 <div class="d-flex justify-content-center">
   <h6 style="color: white;" id="instadetailscheck"></h6>
+  <div id="recommdation">
+  </div>
 </div>
 
 <div class="row d-flex justify-content-center" style="margin: 1rem 4rem;">
@@ -210,7 +212,6 @@ justify-content: center;">
       $("#instagraminlink").html(``)
       $("#instagraminlink").attr("href", ``)
       $("#downloadpdfbtn").css("display", "none");
-      $("#userImage").attr("src", "");
 
       if ($("#linkedin").val() !== ""){
         $.ajax({
@@ -220,7 +221,10 @@ justify-content: center;">
           data: {linkedin: $("#linkedin").val()},
     
           success: function (res) {
+            $("#recommdation").html("")
+            $("#userImage").attr("src", "");
             $("#loadingID").removeClass("loading");
+            $("#instadetailscheck").html();
             $("#livedata").html(
               `<h6 class="m-lg-3" id="fullNameforinsta">Full Name: ${res?.profile?.firstName} ${res?.profile?.lastName}</h6>
               <h6 class="m-lg-3">Email: ${res?.contact_info?.email_address}</h6>
@@ -229,9 +233,14 @@ justify-content: center;">
             )
             $("#fullname").val(`${res?.profile?.firstName} ${res?.profile?.lastName}`)
             response = res;
+            let flex_checkProfile = false;
             if (res?.profile?.firstName){
               $("#Linkedinlink").html(`https://www.linkedin.com/in/${res?.username}`)
               $("#Linkedinlink").attr("href", `https://www.linkedin.com/in/${res?.username}`)
+              flex_checkProfile = true
+            }
+            else{
+              flex_checkProfile = false
             }
             if (res?.instalink !== ""){
               $("#instadetailscheck").html(`InstaGram Details: ${res?.insta_details}`)
@@ -239,14 +248,27 @@ justify-content: center;">
               $("#instagraminlink").html(`${res?.instalink}`)
               $("#instagraminlink").attr("href", `${res?.instalink}`)
               $("#userImage").attr("src", `${res?.image}`)
+              flex_checkProfile = true
             }
             else{
               $("#userImage").attr("src", "https://imgs.search.brave.com/UVxgcnb2CU5kC8mI3pZDf1srnZ6rVOQrqDVWSD3dx70/rs:fit:474:225:1/g:ce/aHR0cHM6Ly90c2Ux/LmV4cGxpY2l0LmJp/bmcubmV0L3RoP2lk/PU9JUC5LcHd6TWp4/bEdONk8yOTA1TEdl/STNnSGFIYSZwaWQ9/QXBp")
+              flex_checkProfile = false
             }
+
             $("#downloadpdfbtn").css("display", "block");
             $("#recent1").html(res?.dbData[0]?.user_id);
             $("#recent2").html(res?.dbData[1]?.user_id);
             $("#recent3").html(res?.dbData[2]?.user_id);
+
+
+            // Case Generate for recommandation
+            if (!flex_checkProfile){
+              let username = res?.username.replace(/[0-9]/g,'');
+              $("#recommdation").append(`<h3 style="color: red;">Do You Mean To Search..</h3>`)
+              for (let loop=0; loop<=3; loop++){
+                $("#recommdation").append(`<h6 style="color: white;">${username}${Math.floor( Math.random()*999 ) + 100}</h6>`)
+              }
+            }
           },
     
           error: function (xhr) {
