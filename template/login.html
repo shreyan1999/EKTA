@@ -24,15 +24,16 @@
         </h2>
       </center>
       <hr>
-      <form>
+      <form method="POST">
+          {% csrf_token %}
             <center>
           <div> 
             <input type="text" name="username" placeholder="Username" value="">
             <input type="password" name="password" placeholder="Password">
           </div>
             <p class="a-link"><a href="#forget-password">Forget password?</a></p>
-              <a href="{% url 'home' %}">Login</a>
-              <!-- <button>Login</button> -->
+              <!-- <a href="{% url 'home' %}">Login</a> -->
+              <button>Login</button>
             </center>
             <br>
         </form>

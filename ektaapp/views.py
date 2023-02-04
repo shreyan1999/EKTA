@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from linkedin_api import Linkedin
 from reportlab.pdfgen import canvas  
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -57,7 +57,8 @@ class DownloadPDF(APIView):
 class LoginView(View):
     def get(self, request):
         return render(request, "login.html")
-    
+    def post(self, request):
+        return HttpResponseRedirect("/home/")
 
 class ImageSearchView(View):
     def get(self, request):
