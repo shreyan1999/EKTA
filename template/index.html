@@ -243,9 +243,7 @@
               $("#Linkedinlink").attr("href", `https://www.linkedin.com/in/${res?.username}`)
               flex_checkProfile = true
             }
-            else{
-              flex_checkProfile = false
-            }
+            
             if (res?.instalink !== ""){
               $("#instadetailscheck").html(`InstaGram Details: ${res?.insta_details}`)
               $("#fullNameforinsta").html(`Full Name: ${res?.insta_details.split(" - ")[1].split(" (")[0]}`)
@@ -266,7 +264,6 @@
             }
             else{
               $("#userImage").attr("src", "https://imgs.search.brave.com/UVxgcnb2CU5kC8mI3pZDf1srnZ6rVOQrqDVWSD3dx70/rs:fit:474:225:1/g:ce/aHR0cHM6Ly90c2Ux/LmV4cGxpY2l0LmJp/bmcubmV0L3RoP2lk/PU9JUC5LcHd6TWp4/bEdONk8yOTA1TEdl/STNnSGFIYSZwaWQ9/QXBp")
-              flex_checkProfile = false
             }
 
             $("#downloadpdfbtn").css("display", "block");
