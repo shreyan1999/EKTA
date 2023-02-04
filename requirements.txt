@@ -1,5 +1,6 @@
 asgiref==3.6.0
 beautifulsoup4==4.11.2
+bs4==0.0.1
 certifi==2022.12.7
 charset-normalizer==3.0.1
 Django==4.1.6
@@ -7,6 +8,7 @@ djangorestframework==3.14.0
 idna==3.4
 linkedin-api==2.0.0a5
 lxml==4.9.2
+pdfkit==1.0.0
 Pillow==9.4.0
 psycopg2-binary==2.9.5
 pytz==2022.7.1

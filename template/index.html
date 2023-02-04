@@ -19,8 +19,11 @@ justify-content: center;">
   </div>
 </div>
 
+<div class="d-flex justify-content-center">
+  <h6 style="color: white;" id="instadetailscheck"></h6>
+</div>
+
 <div class="row d-flex justify-content-center" style="margin: 1rem 4rem;">
-  
       <div class="card mt-5 custom-btn" style="height: 430px">
 
       <!-- <div class="input-group">
@@ -84,7 +87,7 @@ justify-content: center;">
 
     
       <div class="num-box" style="min-width: 255px!important" id="livedata">
-        <h6 class="m-lg-3">Full Name: {{profile.firstName}} {{profile.lastName}}</h6>
+        <h6 class="m-lg-3" id="fullNameforinsta">Full Name: {{profile.firstName}} {{profile.lastName}}</h6>
         <h6 class="m-lg-3">Email: {{email_address}}</h6>
         <h6 class="m-lg-3">Phone Number: {{number}}</h6>
         <h6 class="m-lg-3">industrial Name: {{profile.industryName}}</h6>
@@ -219,7 +222,7 @@ justify-content: center;">
           success: function (res) {
             $("#loadingID").removeClass("loading");
             $("#livedata").html(
-              `<h6 class="m-lg-3">Full Name: ${res?.profile?.firstName} ${res?.profile?.lastName}</h6>
+              `<h6 class="m-lg-3" id="fullNameforinsta">Full Name: ${res?.profile?.firstName} ${res?.profile?.lastName}</h6>
               <h6 class="m-lg-3">Email: ${res?.contact_info?.email_address}</h6>
               <h6 class="m-lg-3">Phone Number: ${res?.contact_info?.phone_numbers[0]?.number}</h6>
               <h6 class="m-lg-3">industrial Name: ${res?.profile?.industryName}</h6>`
@@ -231,6 +234,8 @@ justify-content: center;">
               $("#Linkedinlink").attr("href", `https://www.linkedin.com/in/${res?.username}`)
             }
             if (res?.instalink !== ""){
+              $("#instadetailscheck").html(`InstaGram Details: ${res?.insta_details}`)
+              $("#fullNameforinsta").html(`Full Name: ${res?.insta_details.split(" - ")[1].split(" (")[0]}`)
               $("#instagraminlink").html(`${res?.instalink}`)
               $("#instagraminlink").attr("href", `${res?.instalink}`)
               $("#userImage").attr("src", `${res?.image}`)

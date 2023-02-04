@@ -50,6 +50,7 @@ class DownloadPDF(APIView):
             p.drawString(10,400, f"LinkedIN URL: Not Found")
         if "instalink" in context:
             p.drawString(10,350, f"Instagram URL: {context['instalink']}")
+            p.drawString(10,300, f"Instagram Details: {context['insta_details']}")
         p.save()
         return response
     
@@ -82,19 +83,20 @@ def instaGramData(username):
         profile = [i.get("content") for i in soup.find_all("meta") if i.get("content") and "http" in i.get("content")]
         insta_profile = profile[0]
         insta_id = profile[1]
-        return insta_profile, insta_id
-    return "", ""
+        insta_details = [i.get("content") for i in soup.find_all("meta")][-3].replace("See Instagram photos and videos from", "")
+        return insta_profile, insta_id, insta_details
+    return "", "", ""
     
     
 class LinkedInDATAAPI(APIView):
     def post(self, request):
         global context
-        image, link, profile, contact_info = "", "", {}, {}
+        image, link, profile, contact_info, insta_details = "", "", {}, {}, ""
         api = Linkedin('yashgarg11131@gmail.com', 'Opentheaccount@123')
         data = request.data
         try:
             RecentSearch(user_id=data["linkedin"]).save()
-            image, link = instaGramData(data["linkedin"])
+            image, link, insta_details = instaGramData(data["linkedin"])
         except:
             pass
         try:
@@ -102,5 +104,5 @@ class LinkedInDATAAPI(APIView):
             contact_info = api.get_profile_contact_info(data["linkedin"])
         except:
             return Response({"status": status.HTTP_404_NOT_FOUND, "message": "Result not found."}, status=status.HTTP_404_NOT_FOUND)
-        context = {"image": image, "instalink": link, "username": data["linkedin"], "status": status.HTTP_200_OK, "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}
-        return Response({"status": status.HTTP_200_OK,"image": image, "instalink": link, "username": data["linkedin"], "message": "Data found successfully.", "profile": profile, "contact_info": contact_info, "dbData": RecentSearch.objects.all()[0:3].values()}, status=status.HTTP_200_OK)
+        context = {"image": image, "insta_details": insta_details, "instalink": link, "username": data["linkedin"], "status": status.HTTP_200_OK, "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}
+        return Response({"status": status.HTTP_200_OK, "insta_details": insta_details, "image": image, "instalink": link, "username": data["linkedin"], "message": "Data found successfully.", "profile": profile, "contact_info": contact_info, "dbData": RecentSearch.objects.all()[0:3].values()}, status=status.HTTP_200_OK)
