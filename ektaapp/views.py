@@ -6,35 +6,50 @@ from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import requests
+from bs4 import BeautifulSoup
+from ektaapp.models import *
 # Create your views here.
 
 context = {}
 class DownloadPDF(APIView):
     def get(self, request):
         response = HttpResponse(content_type='application/pdf')  
-        response['Content-Disposition'] = f"""attachment; filename="ys123.pdf"""  
+        response['Content-Disposition'] = f"""attachment; filename="EKTA.pdf"""  
         p = canvas.Canvas(response)  
         p.setFont("Times-Roman", 20)  
         p.drawString(10,800, "Ekta Solve more crimes.")
-        p.drawString(10,750, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")
-        p.drawString(10,700, f"Industry Name: {context['profile']['industryName']}")
-        if 'email_address' in context['contact_info']:
-            p.drawString(10,650, f"Email: {context['contact_info']['email_address']}")
+        if 'firstName' in context["profile"]:
+            p.drawString(10,750, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")
+            p.drawString(10,700, f"Industry Name: {context['profile']['industryName']}")
+            if 'email_address' in context['contact_info']:
+                p.drawString(10,650, f"Email: {context['contact_info']['email_address']}")
+            else:
+                p.drawString(10,650, f"Email: NOT Found")
+                
+            if len(context['contact_info']['phone_numbers']) != 0:
+                p.drawString(10,600, f"Phone Number: {context['contact_info']['phone_numbers'][0]['number']}")
+            else:
+                p.drawString(10,600, f"Phone Number: NOT Found")
+                
+            if 'birthDate' in context['profile']:
+                p.drawString(10,550, f"Birthday: {context['profile']['birthDate']['month']} month, {context['profile']['birthDate']['day']} day.")
+            if len(context['profile']['experience']) != 0:
+                p.drawString(10,500, f"Experience: {context['profile']['experience'][0]['companyName']}, {context['profile']['experience'][0]['locationName']}")
+            if len(context['profile']['education']) != 0:
+                p.drawString(10,450, f"Education: {context['profile']['education'][0]['school']['schoolName']}")
+            p.drawString(10,400, f"LinkedIN URL: https://www.linkedin.com/in/{context['username']}/")
         else:
-            p.drawString(10,650, f"Email: NOT ADDED")
-            
-        if len(context['contact_info']['phone_numbers']) != 0:
-            p.drawString(10,600, f"Phone Number: {context['contact_info']['phone_numbers'][0]['number']}")
-        else:
-            p.drawString(10,600, f"Phone Number: NOT ADDED")
-            
-        if 'birthDate' in context['profile']:
-            p.drawString(10,550, f"Birthday: {context['profile']['birthDate']['month']} month, {context['profile']['birthDate']['day']} day.")
-        if len(context['profile']['experience']) != 0:
-            p.drawString(10,500, f"Experience: {context['profile']['experience'][0]['companyName']}, {context['profile']['experience'][0]['locationName']}")
-        if len(context['profile']['education']) != 0:
-            p.drawString(10,450, f"Education: {context['profile']['education'][0]['school']['schoolName']}")
-        p.drawString(10,400, f"LinkedIN URL: https://www.linkedin.com/in/{context['username']}/")
+            p.drawString(10,750, f"Full Name: Not Found")
+            p.drawString(10,700, f"Industry Name: Not Found")
+            p.drawString(10,650, f"Email: Not Found")
+            p.drawString(10,600, f"Phone Number: Not Found")
+            p.drawString(10,550, f"Birthday: Not Found")
+            p.drawString(10,500, f"Experience: Not Found")
+            p.drawString(10,450, f"Education: Not Found")
+            p.drawString(10,400, f"LinkedIN URL: Not Found")
+        if "instalink" in context:
+            p.drawString(10,350, f"Instagram URL: {context['instalink']}")
         p.save()
         return response
     
@@ -44,25 +59,48 @@ class LoginView(View):
 
 class HomeView(View):
     def get(self, request):
-        return render(request, "index.html")
+        recent_searchdata = RecentSearch.objects.all()[0:3].values_list('user_id', flat=True)
+        result = []
+        for i in range(len(recent_searchdata)):
+            result.append({"id": i+1, "user_id": recent_searchdata[i]})
+        context = {
+            "userdata": result
+        }
+        return render(request, "index.html", context)
     
     # def post(self, request):
     #     global username
     #     if "linkedin" in request.POST:
     #         username = request.POST["linkedin"]
     #     return render(request, "index.html", context)
-    
+
+def instaGramData(username):
+    BASE_URL = f"https://www.instagram.com/{username}/"
+    x = requests.get(BASE_URL)
+    if x.status_code == 200:
+        soup = BeautifulSoup(x.text, 'html.parser')
+        profile = [i.get("content") for i in soup.find_all("meta") if i.get("content") and "http" in i.get("content")]
+        insta_profile = profile[0]
+        insta_id = profile[1]
+        return insta_profile, insta_id
+    return "", ""
     
     
 class LinkedInDATAAPI(APIView):
     def post(self, request):
         global context
+        image, link, profile, contact_info = "", "", {}, {}
         api = Linkedin('yashgarg11131@gmail.com', 'Opentheaccount@123')
         data = request.data
+        try:
+            RecentSearch(user_id=data["linkedin"]).save()
+            image, link = instaGramData(data["linkedin"])
+        except:
+            pass
         try:
             profile = api.get_profile(data["linkedin"])
             contact_info = api.get_profile_contact_info(data["linkedin"])
         except:
             return Response({"status": status.HTTP_404_NOT_FOUND, "message": "Result not found."}, status=status.HTTP_404_NOT_FOUND)
-        context = {"username": data["linkedin"], "status": status.HTTP_200_OK, "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}
-        return Response({"status": status.HTTP_200_OK, "username": data["linkedin"], "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}, status=status.HTTP_200_OK)
+        context = {"image": image, "instalink": link, "username": data["linkedin"], "status": status.HTTP_200_OK, "message": "Data found successfully.", "profile": profile, "contact_info": contact_info}
+        return Response({"status": status.HTTP_200_OK,"image": image, "instalink": link, "username": data["linkedin"], "message": "Data found successfully.", "profile": profile, "contact_info": contact_info, "dbData": RecentSearch.objects.all()[0:3].values()}, status=status.HTTP_200_OK)
