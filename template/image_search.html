@@ -199,6 +199,7 @@ h3{
         <h3>Select Image File</h3>     
       </div>
       <form id="file-upload-form" class="uploader">
+        {% csrf_token %}
         <input id="file-upload" type="file" name="fileUpload" accept="image/*" />
 
         <label for="file-upload" id="file-drag" class="animated wow zoomInUp delay-1s">
