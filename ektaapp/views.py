@@ -57,6 +57,12 @@ class DownloadPDF(APIView):
 class LoginView(View):
     def get(self, request):
         return render(request, "login.html")
+    
+
+class ImageSearchView(View):
+    def get(self, request):
+        return render(request, "image_search.html")
+    
 
 class HomeView(View):
     def get(self, request):

@@ -84,10 +84,6 @@
             background-color: #161e25;
           }
 
-          {% comment %} .nav_list {
-            overflow-y: scroll; 
-            height: 700px;
-          } {% endcomment %}
         </style>
         <body id="body-pd">
 
@@ -119,11 +115,18 @@
                               <span class="nav_name">Dashboard</span> 
                             </a> -->
 
-                            <a href="" class="nav_link"> 
+                            <a href="{% url 'home' %}" class="nav_link"> 
                               <i class='bx'><span class="material-symbols-outlined">
                                 boy
                                 </span></i> 
                               <span class="nav_name">Station Management</span> 
+                            </a> 
+
+                            <a href="{% url 'image-search' %}" class="nav_link"> 
+                              <i class='bx'><span class="material-symbols-outlined">
+                                image
+                                </span></i> 
+                              <span class="nav_name">Image Search</span> 
                             </a> 
 
                             <a href="" class="nav_link"> 
@@ -170,18 +173,6 @@
              
 
             <!--Container Main start-->
-            <div id="hero" style="padding: 0;">
-              <div id="lamp">
-                <div id="bulb">
-                  <div class="gonna-give-light"></div>
-                </div>
-                <div id="stem1"></div>
-                <div id="stem2"></div>
-                <div id="filament"></div>
-                <div id="filament2"></div>
-              </div>
-
-  
               {% block content %}  
               
               {% endblock content %}
