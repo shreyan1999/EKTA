@@ -17,7 +17,7 @@ class DownloadPDF(APIView):
         response = HttpResponse(content_type='application/pdf')  
         response['Content-Disposition'] = f"""attachment; filename="EKTA.pdf"""  
         p = canvas.Canvas(response)  
-        p.setFont("Times-Roman", 20)  
+        p.setFont("Times-Roman", 16)  
         p.drawString(10,800, "Ekta Solve more crimes.")
         if 'firstName' in context["profile"]:
             p.drawString(10,750, f"Full Name: {context['profile']['firstName']} {context['profile']['lastName']}")

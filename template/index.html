@@ -2,8 +2,7 @@
 
 
 {% block header %}
-<div style="width: 100%;
-justify-content: center;">
+<div style="width: 100%; justify-content: center;">
   <h3 style="color: #8cdeea; text-align:center;">Ekta Solve More Crimes</h3>
 </div>
 {% endblock %}
@@ -22,6 +21,11 @@ justify-content: center;">
 <div class="d-flex justify-content-center">
   <h6 style="color: white;" id="instadetailscheck"></h6>
   <div id="recommdation">
+  </div>
+</div>
+
+<div class="d-flex justify-content-center">
+  <div id="fakeAccount">
   </div>
 </div>
 
@@ -225,6 +229,7 @@ justify-content: center;">
             $("#userImage").attr("src", "");
             $("#loadingID").removeClass("loading");
             $("#instadetailscheck").html();
+            $("#fakeAccount").html();
             $("#livedata").html(
               `<h6 class="m-lg-3" id="fullNameforinsta">Full Name: ${res?.profile?.firstName} ${res?.profile?.lastName}</h6>
               <h6 class="m-lg-3">Email: ${res?.contact_info?.email_address}</h6>
@@ -248,6 +253,16 @@ justify-content: center;">
               $("#instagraminlink").html(`${res?.instalink}`)
               $("#instagraminlink").attr("href", `${res?.instalink}`)
               $("#userImage").attr("src", `${res?.image}`)
+              let follwers = res?.insta_details.split(", ")[0].replace(" ", "").replace("Followers", '')
+              console.log("follwers---",follwers)
+              if (!follwers.includes("M")){
+                if (Number(follwers[0]+follwers[1]) <= 50){
+                  $("#fakeAccount").append(`<h4 style="color: red;">This Account Could be fake please verify.</h4>`);
+                }
+                if (Number(follwers[0]) <= 10){
+                  $("#fakeAccount").append(`<h4 style="color: red;">This Account Could be fake please verify.</h4>`);
+                }
+              }
               flex_checkProfile = true
             }
             else{
@@ -269,6 +284,7 @@ justify-content: center;">
                 $("#recommdation").append(`<h6 style="color: white;">${username}${Math.floor( Math.random()*999 ) + 100}</h6>`)
               }
             }
+
           },
     
           error: function (xhr) {
